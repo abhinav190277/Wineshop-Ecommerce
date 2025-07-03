@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends 'base.html' %}
+    {% block extra_styles %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #171820 0%, #16111b 100%);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .cart-header {
+            margin-top: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .cart-header h1 {
+            font-size: 2.5rem;
+        }
+
+        .cart-content {
+            background-color: #252837;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid #444;
+            padding: 15px 0;
+        }
+
+        .item-image img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            background-color: #f0f0f0;
+        }
+
+        .item-details {
+            flex: 2;
+        }
+
+        .item-details h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+
+        .item-details p {
+            color: #bbb;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .qty-btn:hover {
+            background: #5461c8;
+        }
+
+        .qty-input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+            background: #eee;
+            color: #000;
+        }
+
+        .item-price {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #84b4f7;
+        }
+
+        .remove-btn {
+            background: #e74c3c;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .remove-btn:hover {
+            background: #c0392b;
+        }
+
+        .cart-summary {
+            margin-top: 30px;
+        }
+
+        .summary-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .subtotal {
+            font-size: 1.2rem;
+            text-align: right;
+            color: #fff;
+        }
+
+        .summary-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .continue-shopping {
+            color: #84b4f7;
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 10px 15px;
+            background-color: #2b2e3c;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .continue-shopping:hover {
+            background-color: #3d4050;
+            color: #ffffff;
+        }
+
+        .checkout-btn {
+            background: #28a745;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .checkout-btn:hover {
+            background: #218838;
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 50px;
+            color: #bbb;
+        }
+    </style>
+        {% endblock %}
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+                document.getElementsByClassName('.qty-btn').forEach(button => {
+                    button.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        console.log("hellooooooooooo");
+        
+                        const itemId = this.dataset.itemId;
+                        const action = this.dataset.action;
+        
+                        fetch(`/update_qty/${itemId}/`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': csrftoken,
+                            },
+                            body: JSON.stringify({ action: action }),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const qtyInput = document.getElementById(`qty-${itemId}`);
+                                qtyInput.value = data.new_quantity;
+        
+                                
+                            } else {
+                                alert(data.error || "Failed to update quantity");
+                            }
+                        })
+                        .catch(error => console.error("Error:", error));
+                    });
+                });
+            });
+        </script>
+
+</head>
+<body>
+    {% block content %}
+
+<div class="container">
+    <form style="display:none;">
+        {% csrf_token %}
+    </form>
+    <div class="cart-header">
+        <h1>Your Shopping Cart</h1>
+        <p>Manage your items below</p>
+    </div>
+    <div class="cart-content">
+        {% if items %}
+            {% for item in items %}
+                <div class="cart-item" data-item-id="{{ item.id }}">
+                    <div class="item-image">
+                        {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/80" alt="No image">
+                        {% endif %}
+                    </div>
+                    <div class="item-details">
+                        <h3>{{ item.product.name }}</h3>
+                        <p>{{ item.product.description|truncatewords:10 }}</p>
+                    </div>
+                    <div class="quantity-control">
+                        <div class="quantity-control">
+                            <button class="qty-btn decrease-qty" data-item-id="{{ item.id }}" data-action="decrease">-</button>
+                            <input class="qty-input" type="text" value="{{ item.quantity }}" readonly id="qty-{{ item.id }}">
+                            <button class="qty-btn increase-qty" data-item-id="{{ item.id }}" data-action="increase">+</button>
+                        </div>
+                        
+                    </div>
+                    <div class="item-price">₹{{ item.total_amount }}</div>
+                    <button class="remove-btn">Remove</button>
+                </div>
+            {% endfor %}
+            
+            <div class="cart-summary">
+                <div class="summary-details">
+                    <div class="subtotal">
+                        Subtotal: <strong>₹{{ total|floatformat:2 }}</strong>
+                    </div>
+                    <div class="summary-actions">
+                        <a href="/shop/" class="continue-shopping">
+                            <i class="fas fa-arrow-left"></i> Continue Shopping
+                        </a>
+                        <button class="checkout-btn">
+                            <i class="fas fa-credit-card"></i> Checkout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="cart-empty">
+                <h2>Your cart is empty!</h2>
+                <p>Start shopping to add items to your cart.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+</body>
+</html>
