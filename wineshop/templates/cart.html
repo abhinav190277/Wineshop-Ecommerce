@@ -2,228 +2,311 @@
 <html lang="en">
 <head>
     {% extends 'base.html' %}
-    {% block extra_styles %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Cart</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #171820 0%, #16111b 100%);
-            color: #fff;
-            margin: 0;
-            padding: 0;
+{% block extra_styles %}
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #171820 0%, #16111b 100%);
+        color: #fff;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .cart-header {
+        margin-top: 40px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .cart-header h1 {
+        font-size: 2.5rem;
+    }
+
+    .cart-content {
+        background-color: #252837;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .cart-item {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        border-bottom: 1px solid #444;
+        padding: 15px 0;
+    }
+
+    .item-image img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        background-color: #f0f0f0;
+    }
+
+    .item-details {
+        flex: 2;
+    }
+
+    .item-details h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        color: #fff;
+    }
+
+    .item-details p {
+        color: #bbb;
+    }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .qty-btn {
+        width: 30px;
+        height: 30px;
+        background: #667eea;
+        border: none;
+        border-radius: 50%;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+    .qty-btn:hover {
+        background: #5461c8;
+    }
+
+    .qty-input {
+        width: 40px;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+        background: #eee;
+        color: #000;
+    }
+
+    .item-price {
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: #84b4f7;
+    }
+
+    .remove-btn {
+        background: #e74c3c;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+
+    .remove-btn:hover {
+        background: #c0392b;
+    }
+
+    .cart-summary {
+        margin-top: 30px;
+    }
+
+    .summary-details {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .subtotal {
+        font-size: 1.2rem;
+        text-align: right;
+        color: #fff;
+    }
+
+    .summary-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .continue-shopping {
+        color: #84b4f7;
+        text-decoration: none;
+        font-size: 0.95rem;
+        padding: 10px 15px;
+        background-color: #2b2e3c;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+    }
+
+    .continue-shopping:hover {
+        background-color: #3d4050;
+        color: #ffffff;
+    }
+
+    .checkout-btn {
+        background: #28a745;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+    .checkout-btn:hover {
+        background: #218838;
+    }
+
+    .cart-empty {
+        text-align: center;
+        padding: 50px;
+        color: #bbb;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(5px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .modal-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .modal-container {
+        background: linear-gradient(135deg, #2a2d3a 0%, #212330 100%);
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        border: 1px solid #444;
+        transform: scale(0.7);
+        transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.show .modal-container {
+        transform: scale(1);
+    }
+
+    .modal-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .modal-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-size: 24px;
+        color: white;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
         }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
+        70% {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
         }
-
-        .cart-header {
-            margin-top: 40px;
-            text-align: center;
-            margin-bottom: 30px;
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
         }
+    }
 
-        .cart-header h1 {
-            font-size: 2.5rem;
-        }
+    .modal-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #fff;
+        margin: 0 0 10px;
+    }
 
-        .cart-content {
-            background-color: #252837;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
+    .modal-message {
+        color: #bbb;
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 25px;
+    }
 
-        .cart-item {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            border-bottom: 1px solid #444;
-            padding: 15px 0;
-        }
+    .modal-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
 
-        .item-image img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 8px;
-            background-color: #f0f0f0;
-        }
+    .modal-btn {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 100px;
+    }
 
-        .item-details {
-            flex: 2;
-        }
+    .modal-btn-cancel {
+        background: #6c757d;
+        color: white;
+    }
 
-        .item-details h3 {
-            margin: 0;
-            font-size: 1.2rem;
-            color: #fff;
-        }
+    .modal-btn-cancel:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+    }
 
-        .item-details p {
-            color: #bbb;
-        }
+    .modal-btn-confirm {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    }
 
-        .quantity-control {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+    .modal-btn-confirm:hover {
+        background: linear-gradient(135deg, #ee5a24, #ff6b6b);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    }
 
-        .qty-btn {
-            width: 30px;
-            height: 30px;
-            background: #667eea;
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-        }
+    .modal-btn:active {
+        transform: translateY(0);
+    }
+</style>
+{% endblock %}
 
-        .qty-btn:hover {
-            background: #5461c8;
-        }
-
-        .qty-input {
-            width: 40px;
-            text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 5px;
-            background: #eee;
-            color: #000;
-        }
-
-        .item-price {
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: #84b4f7;
-        }
-
-        .remove-btn {
-            background: #e74c3c;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            padding: 8px 12px;
-            cursor: pointer;
-        }
-
-        .remove-btn:hover {
-            background: #c0392b;
-        }
-
-        .cart-summary {
-            margin-top: 30px;
-        }
-
-        .summary-details {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .subtotal {
-            font-size: 1.2rem;
-            text-align: right;
-            color: #fff;
-        }
-
-        .summary-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .continue-shopping {
-            color: #84b4f7;
-            text-decoration: none;
-            font-size: 0.95rem;
-            padding: 10px 15px;
-            background-color: #2b2e3c;
-            border-radius: 8px;
-            transition: background 0.3s ease;
-        }
-
-        .continue-shopping:hover {
-            background-color: #3d4050;
-            color: #ffffff;
-        }
-
-        .checkout-btn {
-            background: #28a745;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        .checkout-btn:hover {
-            background: #218838;
-        }
-
-        .cart-empty {
-            text-align: center;
-            padding: 50px;
-            color: #bbb;
-        }
-    </style>
-        {% endblock %}
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        
-                document.getElementsByClassName('.qty-btn').forEach(button => {
-                    button.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        console.log("hellooooooooooo");
-        
-                        const itemId = this.dataset.itemId;
-                        const action = this.dataset.action;
-        
-                        fetch(`/update_qty/${itemId}/`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRFToken': csrftoken,
-                            },
-                            body: JSON.stringify({ action: action }),
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                const qtyInput = document.getElementById(`qty-${itemId}`);
-                                qtyInput.value = data.new_quantity;
-        
-                                
-                            } else {
-                                alert(data.error || "Failed to update quantity");
-                            }
-                        })
-                        .catch(error => console.error("Error:", error));
-                    });
-                });
-            });
-        </script>
-
-</head>
-<body>
-    {% block content %}
-
+{% block content %}
 <div class="container">
-    <form style="display:none;">
-        {% csrf_token %}
-    </form>
     <div class="cart-header">
         <h1>Your Shopping Cart</h1>
         <p>Manage your items below</p>
@@ -244,22 +327,19 @@
                         <p>{{ item.product.description|truncatewords:10 }}</p>
                     </div>
                     <div class="quantity-control">
-                        <div class="quantity-control">
-                            <button class="qty-btn decrease-qty" data-item-id="{{ item.id }}" data-action="decrease">-</button>
-                            <input class="qty-input" type="text" value="{{ item.quantity }}" readonly id="qty-{{ item.id }}">
-                            <button class="qty-btn increase-qty" data-item-id="{{ item.id }}" data-action="increase">+</button>
-                        </div>
-                        
+                        <button class="qty-btn decrease-qty" data-item-id="{{ item.id }}" data-action="decrease">-</button>
+                        <input class="qty-input" type="text" value="{{ item.quantity }}" readonly id="qty-{{ item.id }}">
+                        <button class="qty-btn increase-qty" data-item-id="{{ item.id }}" data-action="increase">+</button>
                     </div>
-                    <div class="item-price">₹{{ item.total_amount }}</div>
-                    <button class="remove-btn">Remove</button>
+                    <div class="item-price" data-unit-price="{{ item.product.price }}">₹{{ item.total_amount }}</div>
+                    <button class="remove-btn" data-item-id="{{ item.id }}">Remove</button>
                 </div>
             {% endfor %}
             
             <div class="cart-summary">
                 <div class="summary-details">
                     <div class="subtotal">
-                        Subtotal: <strong>₹{{ total|floatformat:2 }}</strong>
+                        Subtotal: <strong id="cart-total">₹{{ total|floatformat:2 }}</strong>
                     </div>
                     <div class="summary-actions">
                         <a href="/shop/" class="continue-shopping">
@@ -279,11 +359,146 @@
         {% endif %}
     </div>
 </div>
+
+<!-- Remove Item Modal -->
+<div class="modal-overlay" id="removeModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <div class="modal-icon">
+                <i class="fas fa-trash-alt"></i>
+            </div>
+            <h3 class="modal-title">Remove Item</h3>
+            <p class="modal-message">Are you sure you want to remove this item from your cart? This action cannot be undone.</p>
+        </div>
+        <div class="modal-actions">
+            <button class="modal-btn modal-btn-cancel" id="cancelRemove">Cancel</button>
+            <button class="modal-btn modal-btn-confirm" id="confirmRemove">Remove</button>
+        </div>
+    </div>
+</div>
+
+<!-- CSRF token for AJAX requests -->
+<form style="display:none;">
+    {% csrf_token %}
+</form>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    // Function to update cart total
+    function updateCartTotal() {
+        let total = 0;
+        document.querySelectorAll('.cart-item').forEach(item => {
+            const priceElement = item.querySelector('.item-price');
+            const priceText = priceElement.textContent.replace('₹', '').replace(',', '');
+            total += parseFloat(priceText) || 0;
+        });
+        document.getElementById('cart-total').textContent = `₹${total.toFixed(2)}`;
+    }
+    
+    function updateItemPrice(itemId, quantity) {
+        const cartItem = document.querySelector(`[data-item-id="${itemId}"]`);
+        const priceElement = cartItem.querySelector('.item-price');
+        const unitPrice = parseFloat(priceElement.dataset.unitPrice) || 0;
+        const newTotal = unitPrice * quantity;
+        priceElement.textContent = `₹${newTotal}`;
+    }
+    
+    document.querySelectorAll('.qty-btn').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            
+            const itemId = this.dataset.itemId;
+            const action = this.dataset.action;
+            const qtyInput = document.getElementById(`qty-${itemId}`);
+            let currentQty = parseInt(qtyInput.value) || 0;
+            
+            console.log("Button clicked:", action, "Item ID:", itemId);
+            
+            if (action === 'increase') {
+                currentQty += 1;
+            } else if (action === 'decrease' && currentQty > 1) {
+                currentQty -= 1;
+            }
+            
+            qtyInput.value = currentQty;
+            updateItemPrice(itemId, currentQty);
+            updateCartTotal();
+            
+            fetch(`/update_qty/${itemId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({ action: action }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log("Quantity updated successfully");
+                    if (data.new_quantity !== currentQty) {
+                        qtyInput.value = data.new_quantity;
+                        updateItemPrice(itemId, data.new_quantity);
+                        updateCartTotal();
+                    }
+                } else {
+                    alert(data.error || "Failed to update quantity");
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Network error. Please try again.");
+                location.reload();
+            });
+        });
+    });
+    
+    document.querySelectorAll('.remove-btn').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            
+            const itemId = this.dataset.itemId;
+            
+            if (confirm('Are you sure you want to remove this item?')) {
+                fetch(`/remove-item/${itemId}/`,  {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const cartItem = document.querySelector(`[data-item-id="${itemId}"]`);
+                    cartItem.remove();
+
+                    if (document.querySelectorAll('.cart-item').length === 0) {
+                        document.querySelector('.cart-content').innerHTML = `
+                            <div class="cart-empty">
+                                <h2>Your cart is empty!</h2>
+                                <p>Start shopping to add items to your cart.</p>
+                            </div>
+                        `;
+                    }
+                } else {
+                        alert(data.error || "Failed to remove item");
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Network error. Please try again.");
+                    location.reload();
+                });
+            }
+        });
+    });
+});
+</script>
 {% endblock %}
-
-
-
-
-
 </body>
 </html>
