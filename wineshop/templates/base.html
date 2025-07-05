@@ -560,9 +560,17 @@
                 
                 <div class="cta-buttons">
                     <i class="fas fa-search search-icon"></i>
-                    <a href="#" class="btn-outline-custom">Login</a>
-                    <a href="shop/" class="btn-primary-custom">Shop Wine</a>
+                    
+                    {% if user.is_authenticated %}
+                        <span class="btn-outline-custom">Hi, {{ user.username }}</span>
+                        <a href="{% url 'logout' %}" class="btn-outline-custom">Logout</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn-outline-custom">Login</a>
+                    {% endif %}
+                
+                    <a href="{% url 'shop' %}" class="btn-primary-custom">Shop Wine</a>
                 </div>
+                
             </div>
         </div>
     </nav>
