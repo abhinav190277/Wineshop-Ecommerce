@@ -36,22 +36,39 @@ def shop_page(request):
     return render(request, 'shop.html', context)    
 
 
+ 
 
 @login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
+    
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+    except (ValueError, TypeError):
+        quantity = 1
+
+    try:
+        total_price = float(request.POST.get('total_price', 0.0))
+    except (ValueError, TypeError):
+        total_price = product.price * quantity  
 
     cart_item, created = AddToCart.objects.get_or_create(
         user=request.user,
         product=product,
-        defaults={'quantity': 1}
+        defaults={
+            'quantity': quantity,
+            'total_price': total_price,  
+        }
     )
 
     if not created:
-        cart_item.quantity += 1  
-    cart_item.save()  
+        cart_item.quantity += quantity
+        cart_item.total_price = cart_item.quantity * product.price  
+        cart_item.save()
 
-    return redirect('shop')  
+    return redirect('cart_view')
+
+  
 
 
 from django.contrib.auth.decorators import login_required

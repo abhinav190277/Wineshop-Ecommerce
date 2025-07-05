@@ -458,11 +458,12 @@
             }
         }
     </style>
-    {% endblock %}
-   
+        {% endblock %}
+
 </head>
 <body>
     {% block content %}
+
     <main class="container">
         <nav class="breadcrumb">
             <a href="{% url 'home' %}">Home</a> / <a href="#">Wine</a> / <span>{{ product.name }}</span>
@@ -496,7 +497,7 @@
                     </span>
                 </div>
 
-                <div class="price">${{ product.price }}</div>
+                <div class="price" id="totalPrice">${{ product.price }}</div>
 
                 <div class="stock-status {% if product.stock <= 0 %}out-of-stock{% endif %}">
                     <div class="stock-dot"></div>
@@ -514,27 +515,29 @@
                 </div>
 
                 <div class="purchase-section">
-                    <!-- <div class="success-message" id="successMessage">
-                        Successfully added to cart!
-                    </div> -->
-
                     <div class="quantity-section">
                         <label class="quantity-label">Quantity</label>
                         <div class="quantity-controls">
-                            <button class="qty-btn" onclick="decreaseQuantity()" {% if product.stock <= 0 %}disabled{% endif %}>−</button>
+                            <button class="qty-btn" id="decreaseBtn" type="button" {% if product.stock <= 0 %}disabled{% endif %}>−</button>
                             <input type="number" class="qty-input" id="quantity" value="1" min="1" max="{{ product.stock }}" {% if product.stock <= 0 %}disabled{% endif %}>
-                            <button class="qty-btn" onclick="increaseQuantity()" {% if product.stock <= 0 %}disabled{% endif %}>+</button>
+                            <button class="qty-btn" id="increaseBtn" type="button" {% if product.stock <= 0 %}disabled{% endif %}>+</button>
                         </div>
                     </div>
 
-                    <button class="add-to-cart" onclick="addToCart()" {% if product.stock <= 0 %}disabled{% endif %}>
+
+                    <form method="post" action="{% url 'add-to-cart' product.id %}">
+                        {% csrf_token %}
+                    <input type="hidden" name="quantity" id="hiddenQty" value="1">
+                    <input type="hidden" name="total_price" id="hiddenPrice" value="{{ product.price }}">
+
+                    <button class="add-to-cart"  {% if product.stock <= 0 %}disabled{% endif %}>
                         {% if product.stock > 0 %}
                             Add to Cart
                         {% else %}
                             Out of Stock
                         {% endif %}
                     </button>
-                   
+                    </form>
                 </div>
             </div>
         </div>
@@ -608,49 +611,61 @@
             {% endfor %}
         </div>
     </main>
-    {% endblock %}
 
     <script>
-        let currentQuantity = 1;
-        const maxStock = 12;
+        // Store the base price from Django template
+        const basePrice = {{ product.price }};
+        const maxStock = {{ product.stock }};
 
-        function increaseQuantity() {
-            const quantityInput = document.getElementById('quantity');
-            if (currentQuantity < maxStock) {
-                currentQuantity++;
-                quantityInput.value = currentQuantity;
-            }
-        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const increaseBtn = document.getElementById('increaseBtn');
+            const decreaseBtn = document.getElementById('decreaseBtn');
+            const qtyInput = document.getElementById('quantity');
+            const priceElement = document.getElementById('totalPrice');
+            const hiddenQty = document.getElementById('hiddenQty');
+            const hiddenPrice = document.getElementById('hiddenPrice');
 
-        function decreaseQuantity() {
-            const quantityInput = document.getElementById('quantity');
-            if (currentQuantity > 1) {
-                currentQuantity--;
-                quantityInput.value = currentQuantity;
-            }
-        }
 
-        function addToCart() {
-            const successMessage = document.getElementById('successMessage');
-            successMessage.classList.add('show');
-            
-            setTimeout(() => {
-                successMessage.classList.remove('show');
-            }, 3000);
-        }
+            // Increase quantity
+            increaseBtn.addEventListener('click', function() {
+                let currentQty = parseInt(qtyInput.value);
+                if (currentQty < maxStock) {
+                    currentQty++;
+                    qtyInput.value = currentQty;
+                    updatePrice(currentQty);
+                }
+            });
 
-        document.getElementById('quantity').addEventListener('change', function() {
-            const value = parseInt(this.value);
-            if (value >= 1 && value <= maxStock) {
-                currentQuantity = value;
-            } else if (value > maxStock) {
-                this.value = maxStock;
-                currentQuantity = maxStock;
-            } else {
-                this.value = 1;
-                currentQuantity = 1;
+            // Decrease quantity
+            decreaseBtn.addEventListener('click', function() {
+                let currentQty = parseInt(qtyInput.value);
+                if (currentQty > 1) {
+                    currentQty--;
+                    qtyInput.value = currentQty;
+                    updatePrice(currentQty);
+                }
+            });
+
+            qtyInput.addEventListener('input', function() {
+                let currentQty = parseInt(this.value);
+                if (isNaN(currentQty) || currentQty < 1) {
+                    currentQty = 1;
+                    this.value = currentQty;
+                } else if (currentQty > maxStock) {
+                    currentQty = maxStock;
+                    this.value = currentQty;
+                }
+                updatePrice(currentQty);
+            });
+
+            function updatePrice(quantity) {
+                const totalPrice = (basePrice * quantity).toFixed(2);
+                priceElement.textContent = `$${totalPrice}`;
+                hiddenQty.value = quantity;
+                hiddenPrice.value = totalPrice;
             }
         });
     </script>
+     {% endblock %}
 </body>
 </html>

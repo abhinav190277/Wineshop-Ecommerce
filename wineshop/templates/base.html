@@ -129,11 +129,11 @@
             transform: translateY(-1px);
         }
 
-        .nav-link.active {
+        /* .nav-link.active {
             color: var(--text-light) !important;
             background: linear-gradient(135deg, var(--accent-wine), var(--accent-gold));
             box-shadow: 0 4px 15px rgba(139, 21, 56, 0.3);
-        }
+        } */
 
         .navbar-toggler {
             border: none;
@@ -545,30 +545,41 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#home">Home</a>
+                        <a class="nav-link active" href="{% url 'home' %}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#collection">Collection</a>
+                        <a class="nav-link" href="{% url 'shop' %}">Collection</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#about">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#contact">Contact</a>
+                        <a class="nav-link" href="#contact">My Orders</a>
                     </li>
                 </ul>
                 
+                
                 <div class="cta-buttons">
-                    <i class="fas fa-search search-icon"></i>
                     
                     {% if user.is_authenticated %}
-                        <span class="btn-outline-custom">Hi, {{ user.username }}</span>
-                        <a href="{% url 'logout' %}" class="btn-outline-custom">Logout</a>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="btn-outline-custom">Login</a>
-                    {% endif %}
+                    <span class="btn-outline-custom me-3">Hi, {{ user.username }}</span>
+                    
+                    <a href="{% url 'cart_view' %}" class="position-relative me-5 text-decoration-none">
+                        <i class="fas fa-shopping-cart fa-lg text-light"></i>
+                        {% if cart_count > 0 %}
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ cart_count }}
+                            </span>
+                        {% endif %}
+                    </a>
                 
-                    <a href="{% url 'shop' %}" class="btn-primary-custom">Shop Wine</a>
+                    <a href="{% url 'logout' %}" class="btn-outline-custom">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn-outline-custom">Login</a>
+                {% endif %}
+                
+                
+                    
                 </div>
                 
             </div>
@@ -694,11 +705,11 @@
 
         // Active link management
         document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-            });
+            link.addEventListener('click', function() {
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+});
+
         });
 
         // Search functionality
