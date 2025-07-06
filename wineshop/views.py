@@ -41,12 +41,10 @@ def shop_page(request):
 @login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    
     try:
         quantity = int(request.POST.get('quantity', 1))
     except (ValueError, TypeError):
         quantity = 1
-
     try:
         total_price = float(request.POST.get('total_price', 0.0))
     except (ValueError, TypeError):
@@ -57,7 +55,7 @@ def add_to_cart(request, product_id):
         product=product,
         defaults={
             'quantity': quantity,
-            'total_price': total_price,  
+            'total_amount': total_price,  
         }
     )
 
@@ -76,33 +74,49 @@ from django.http import JsonResponse
 import json
 
 @login_required
+
+
 def update_qty(request, item_id):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
             action = data.get("action")
 
+            # Update in DB
             item = AddToCart.objects.get(id=item_id, user=request.user)
 
             if action == "increase":
                 item.quantity += 1
             elif action == "decrease" and item.quantity > 1:
                 item.quantity -= 1
+            else:
+                return JsonResponse({"success": False, "error": "Invalid action or quantity too low."})
 
             item.save()
+
+            # Sync session cart
+            cart = request.session.get('cart', {})
+            cart_item = cart.get(str(item_id), {"quantity": item.quantity})  # ensure dict exists
+            cart_item['quantity'] = item.quantity
+            cart[str(item_id)] = cart_item
+            request.session['cart'] = cart
+
             return JsonResponse({"success": True, "new_quantity": item.quantity})
+
         except AddToCart.DoesNotExist:
             return JsonResponse({"success": False, "error": "Item not found."})
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
+
     return JsonResponse({"success": False, "error": "Invalid request method."})
+
 
 @login_required
 def remove_qty(request, item_id):
     if request.method == "POST":
         try:
             item = AddToCart.objects.get(id=item_id, user=request.user)
-            item.delete()  # This is the correct method to delete an object
+            item.delete()  
             return JsonResponse({"success": True})
         except AddToCart.DoesNotExist:
             return JsonResponse({"success": False, "error": "Item not found."})
