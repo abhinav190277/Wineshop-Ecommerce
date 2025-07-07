@@ -12,5 +12,9 @@ urlpatterns = [
     path('register/', views.register_view, name='register'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
+    path('checkout/', views.checkout, name='checkout'),
+    path('add-address/', views.add_delivery_address, name='add_address'),
+    path('edit-address/<int:address_id>/', views.edit_delivery_address, name='edit_address'),
+
 
 ]

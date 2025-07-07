@@ -314,8 +314,8 @@
     <div class="cart-content">
         {% if items %}
             {% for item in items %}
-                <div class="cart-item" data-item-id="{{ item.id }}">
-                    <div class="item-image">
+            <div class="cart-item" data-item-id="{{ item.product.id }}" data-product-name="{{ item.product.name }}">
+                <div class="item-image">
                         {% if item.product.image %}
                             <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
                         {% else %}
@@ -345,9 +345,20 @@
                         <a href="/shop/" class="continue-shopping">
                             <i class="fas fa-arrow-left"></i> Continue Shopping
                         </a>
-                        <button class="checkout-btn">
-                            <i class="fas fa-credit-card"></i> Checkout
-                        </button>
+                        {% if user.is_authenticated %}
+                        <form id="checkout-form" method="POST" action="{% url 'checkout' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="cart_data" id="cart-data-input">
+                            <button type="submit" class="checkout-btn">
+                                <i class="fas fa-credit-card"></i> Checkout
+                            </button>
+                        </form>
+                        {% else %}
+                        <a href="{% url 'login' %}?next={% url 'cart_view' %}" class="checkout-btn">
+                            <i class="fas fa-sign-in-alt"></i> Login to Checkout
+                        </a>
+                        {% endif %}
+                        
                     </div>
                 </div>
             </div>
@@ -377,7 +388,6 @@
     </div>
 </div>
 
-<!-- CSRF token for AJAX requests -->
 <form style="display:none;">
     {% csrf_token %}
 </form>
@@ -385,8 +395,33 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  
+    const checkoutForm = document.getElementById("checkout-form");
+    if (checkoutForm) {
+        checkoutForm.addEventListener("submit", function (e) {
+            const cartItems = document.querySelectorAll(".cart-item");
+            const cartData = [];
+            const cartCountEl = document.getElementById("cart-count");
+           
+            cartItems.forEach(item => {
+                const itemId = item.dataset.itemId;
+                const name = item.querySelector("h3").textContent.trim();
+                const quantity = parseInt(item.querySelector(".qty-input").value);
+                const price = parseFloat(item.querySelector(".item-price").textContent.replace("₹", "").replace(",", ""));
+                const unitPrice = parseFloat(item.querySelector(".item-price").dataset.unitPrice);
+                cartData.push({
+                    item_id: itemId,
+                    name: name,
+                    quantity: quantity,
+                    unit_price: unitPrice,
+                    total_price: price
+                });
+            });
+
+            document.getElementById("cart-data-input").value = JSON.stringify(cartData);
+        });
+    }
     
-    // Function to update cart total
     function updateCartTotal() {
         let total = 0;
         document.querySelectorAll('.cart-item').forEach(item => {
@@ -437,11 +472,29 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    const cartCountEl = document.getElementById("cart-count");
+                        if (cartCountEl) {
+                            if (data.cart_count > 0) {
+                                cartCountEl.textContent = data.cart_count;
+                            } else {
+                                cartCountEl.remove(); 
+                            }
+                        } else {
+                            const cartLink = document.querySelector('a[href*="cart_view"]');
+                            if (cartLink && data.cart_count > 0) {
+                                const badge = document.createElement("span");
+                                badge.id = "cart-count";
+                                badge.className = "position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger";
+                                badge.textContent = data.cart_count;
+                                cartLink.appendChild(badge);
+                            }
+                        }
                     console.log("Quantity updated successfully");
                     if (data.new_quantity !== currentQty) {
                         qtyInput.value = data.new_quantity;
                         updateItemPrice(itemId, data.new_quantity);
                         updateCartTotal();
+                
                     }
                 } else {
                     alert(data.error || "Failed to update quantity");

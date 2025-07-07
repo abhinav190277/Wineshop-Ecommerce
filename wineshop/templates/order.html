@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Your Order</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .content {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .order-summary {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .order-summary h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #4facfe;
+            padding-bottom: 10px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .order-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .item-details {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .item-total {
+            font-weight: bold;
+            color: #4facfe;
+            font-size: 1.1em;
+        }
+
+        .total-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .total-amount {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .address-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .address-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #4facfe;
+            padding-bottom: 10px;
+        }
+
+        .address-option {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .address-option:hover {
+            border-color: #4facfe;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .address-option.selected {
+            border-color: #4facfe;
+            background: #f0f8ff;
+        }
+
+        .address-option input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .address-details {
+            margin-left: 25px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .address-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            font-size: 1.2em;
+            padding: 15px 35px;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        .no-address {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .order-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .item-info {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛍️ Confirm Your Order</h1>
+            <p>Review your items and delivery address before placing your order</p>
+        </div>
+
+        <div class="content">
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h2>📦 Order Summary</h2>
+                
+                {% for item in order_items %}
+                <div class="order-item">
+                    <div class="item-info">
+                        <div class="item-name">{{ item.product.name }}</div>
+                        <div class="item-details">
+                            Quantity: {{ item.quantity }} × ₹{{ item.product.price }}
+                        </div>
+                    </div>
+                    <div class="item-total">₹{{ item.total }}</div>
+                </div>
+                {% empty %}
+                <div class="no-address">No items in your order</div>
+                {% endfor %}
+
+                <div class="total-section">
+                    <div class="total-amount">
+                        Total: ₹{{ total_amount }}
+                    </div>
+                    <p>Including all taxes and charges</p>
+                </div>
+            </div>
+
+            <div class="address-section">
+                <h2>🚚 Delivery Address</h2>
+                
+             
+                    
+                    {% if delivery_addresses %}
+                        {% for address in delivery_addresses %}
+                        <div class="address-option {% if address.is_default %}selected{% endif %}">
+                            <input type="radio" 
+                                   name="delivery_address" 
+                                   value="{{ address.id }}" 
+                                   id="address_{{ address.id }}"
+                                   {% if address.is_default %}checked{% endif %}>
+                            <label for="address_{{ address.id }}">
+                                <div class="address-name">
+                                    {{ address.full_name }}
+                                    {% if address.is_default %}<span style="color: #4facfe;">(Default)</span>{% endif %}
+                                </div>
+                                <div class="address-details">
+                                    <div>📱 {{ address.phone_number }}</div>
+                                    <div>📍 {{ address.address_line_1 }}</div>
+                                    {% if address.address_line_2 %}
+                                    <div>{{ address.address_line_2 }}</div>
+                                    {% endif %}
+                                    <div>{{ address.city }}, {{ address.state }} - {{ address.postal_code }}</div>
+                                    <div>{{ address.country }}</div>
+                                </div>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-address">
+                            <p>No delivery address found. Please add an address to continue.</p>
+                        </div>
+                    {% endif %}
+
+                    <div style="margin-top: 20px;">
+                        <a href="{% url 'add_address' %}" class="btn btn-secondary">
+                            ➕ Add New Address
+                        </a>
+                        
+                        {% if delivery_addresses %}
+                        <a href="{% url 'edit_address' delivery_addresses.first.id %}" class="btn">
+                            ✏️ Edit Address
+                        </a>
+                        {% endif %}
+                    </div>
+
+                    <div class="actions">
+                        {% if delivery_addresses %}
+                            <button type="submit" class="btn btn-primary">
+                                🎉 Place Order
+                            </button>
+                        {% endif %}
+                        
+                        <!-- <a href="{% url 'checkout' %}" class="btn">
+                            ⬅️ Back to Cart
+                        </a> -->
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.address-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.address-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                this.classList.add('selected');
+                                if (radio) {
+                    radio.checked = true;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

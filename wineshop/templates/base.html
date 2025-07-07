@@ -567,9 +567,10 @@
                     <a href="{% url 'cart_view' %}" class="position-relative me-5 text-decoration-none">
                         <i class="fas fa-shopping-cart fa-lg text-light"></i>
                         {% if cart_count > 0 %}
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ cart_count }}
-                            </span>
+                        <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ cart_count }}
+                        </span>
+                        
                         {% endif %}
                     </a>
                 
