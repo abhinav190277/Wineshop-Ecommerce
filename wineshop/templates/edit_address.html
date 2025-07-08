@@ -239,13 +239,11 @@
                         💾 Update Address
                     </button>
                     
-                    <a href="{% url 'confirm_order' %}" class="btn btn-secondary">
-                        ❌ Cancel
-                    </a>
                     
-                    <button type="button" class="btn btn-danger" onclick="deleteAddress()">
+                    
+                    <!-- <button type="button" class="btn btn-danger" onclick="deleteAddress()">
                         🗑️ Delete Address
-                    </button>
+                    </button> -->
                 </div>
             </form>
         </div>
@@ -309,7 +307,6 @@
                 // Create a form to send DELETE request
                 const form = document.createElement('form');
                 form.method = 'POST';
-                form.action = '{% url "delete_address" address.id %}';
                 
                 // Add CSRF token
                 const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;

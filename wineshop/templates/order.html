@@ -12,32 +12,38 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
             min-height: 100vh;
             padding: 20px;
+            color: #333;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: #2c3e50;
             color: white;
-            padding: 30px;
-            text-align: center;
+            padding: 24px 30px;
+            border-bottom: 1px solid #34495e;
         }
 
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95em;
         }
 
         .content {
@@ -47,36 +53,65 @@
             gap: 30px;
         }
 
-        .order-summary {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
-            border: 1px solid #e9ecef;
+        .section {
+            background: #fff;
+            border: 1px solid #e1e5e9;
+            border-radius: 6px;
+            padding: 24px;
         }
 
-        .order-summary h2 {
-            color: #333;
+        .section h2 {
+            color: #2c3e50;
             margin-bottom: 20px;
-            font-size: 1.5em;
-            border-bottom: 2px solid #4facfe;
-            padding-bottom: 10px;
+            font-size: 1.3em;
+            font-weight: 600;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .order-group {
+            margin-bottom: 30px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .order-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .order-header {
+            background: #f8f9fa;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .order-id {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1em;
+            margin-bottom: 4px;
+        }
+
+        .order-date {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .order-items {
+            background: white;
         }
 
         .order-item {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background: white;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
-            transition: all 0.3s ease;
+            align-items: flex-start;
+            padding: 16px 20px;
+            border-bottom: 1px solid #f1f3f4;
         }
 
-        .order-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        .order-item:last-child {
+            border-bottom: none;
         }
 
         .item-info {
@@ -84,148 +119,399 @@
         }
 
         .item-name {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
+            font-size: 1em;
         }
 
         .item-details {
-            color: #666;
+            color: #6c757d;
             font-size: 0.9em;
+            line-height: 1.4;
         }
 
         .item-total {
-            font-weight: bold;
-            color: #4facfe;
+            font-weight: 600;
+            color: #2c3e50;
             font-size: 1.1em;
+            margin-left: 16px;
         }
 
-        .total-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .order-total {
+            background: #2c3e50;
+            color: white;
+            padding: 16px 20px;
+            text-align: right;
+        }
+
+        .order-total-amount {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .order-total-description {
+            opacity: 0.9;
+            font-size: 0.85em;
+        }
+
+        .grand-total-section {
+            background: #27ae60;
             color: white;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 6px;
             margin-top: 20px;
             text-align: center;
         }
 
-        .total-amount {
-            font-size: 2em;
-            font-weight: bold;
-            margin-bottom: 10px;
+        .grand-total-amount {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
         }
 
-        .address-section {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
-            border: 1px solid #e9ecef;
-        }
-
-        .address-section h2 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            border-bottom: 2px solid #4facfe;
-            padding-bottom: 10px;
-        }
-
-        .address-option {
-            background: white;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            border: 2px solid #e9ecef;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .address-option:hover {
-            border-color: #4facfe;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .address-option.selected {
-            border-color: #4facfe;
-            background: #f0f8ff;
-        }
-
-        .address-option input[type="radio"] {
-            margin-right: 10px;
-        }
-
-        .address-details {
-            margin-left: 25px;
-            color: #666;
+        .grand-total-description {
+            opacity: 0.9;
             font-size: 0.9em;
         }
 
+        .address-option {
+            background: #f8f9fa;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .address-option:hover {
+            border-color: #3498db;
+            background: #f0f8ff;
+        }
+
+        .address-option.selected {
+            border-color: #3498db;
+            background: #e8f4f8;
+        }
+
+        .address-option input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.1);
+        }
+
         .address-name {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .address-details {
+            margin-left: 24px;
+            color: #6c757d;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .address-details div {
+            margin-bottom: 4px;
+        }
+
+        .default-badge {
+            color: #3498db;
+            font-weight: 600;
+            font-size: 0.8em;
         }
 
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #3498db;
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
+            padding: 12px 20px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 0.95em;
             text-decoration: none;
             display: inline-block;
-            transition: all 0.3s ease;
-            margin: 5px;
+            transition: background-color 0.2s ease;
+            margin: 4px;
+            font-weight: 500;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: #2980b9;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            font-size: 1.2em;
-            padding: 15px 35px;
+            background: #27ae60;
+            font-size: 1.1em;
+            padding: 14px 28px;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: #219a52;
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            background: #95a5a6;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #3498db;
+            color: #3498db;
+        }
+
+        .btn-outline:hover {
+            background: #3498db;
+            color: white;
         }
 
         .actions {
             text-align: center;
-            margin-top: 30px;
-            padding: 20px;
+            margin-top: 24px;
+            padding: 20px 0;
+            border-top: 1px solid #e9ecef;
         }
 
-        .no-address {
+        .no-items, .no-address {
             text-align: center;
-            color: #666;
+            color: #6c757d;
             font-style: italic;
             margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .button-group {
+            margin-top: 16px;
+        }
+
+        .icon {
+            margin-right: 6px;
+            font-size: 0.9em;
+        }
+
+        .payment-section {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 24px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .payment-section.active {
+            display: block;
+        }
+
+        .payment-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            font-weight: 600;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .payment-method {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .payment-method:hover {
+            border-color: #3498db;
+            background: #f0f8ff;
+        }
+
+        .payment-method.selected {
+            border-color: #3498db;
+            background: #e8f4f8;
+        }
+
+        .payment-method input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.1);
+        }
+
+        .payment-method-label {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .payment-method-icon {
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        .stripe-form {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .stripe-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            font-size: 0.95em;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+        }
+
+        #card-element {
+            padding: 12px;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            background: white;
+            min-height: 40px;
+        }
+
+        #card-element.StripeElement--focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+        }
+
+        #card-errors {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+
+        .payment-total {
+            background: #2c3e50;
+            color: white;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .payment-total-amount {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .payment-total-description {
+            opacity: 0.9;
+            font-size: 0.85em;
+        }
+
+        .btn-pay {
+            background: #27ae60;
+            color: white;
+            font-size: 1.1em;
+            padding: 14px 28px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-pay:hover {
+            background: #219a52;
+        }
+
+        .btn-pay:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .processing {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .security-notice {
+            display: flex;
+            align-items: center;
+            background: #e8f4f8;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 16px;
+            font-size: 0.9em;
+            color: #2c3e50;
+        }
+
+        .security-notice .icon {
+            color: #27ae60;
+            margin-right: 8px;
         }
 
         @media (max-width: 768px) {
             .content {
                 grid-template-columns: 1fr;
                 gap: 20px;
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
             }
             
             .header h1 {
-                font-size: 2em;
+                font-size: 1.5em;
             }
             
             .order-item {
                 flex-direction: column;
-                text-align: center;
+                text-align: left;
             }
             
             .item-info {
-                margin-bottom: 10px;
+                margin-bottom: 12px;
+            }
+            
+            .item-total {
+                margin-left: 0;
+                align-self: flex-end;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin: 4px 0;
             }
         }
     </style>
@@ -233,100 +519,178 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🛍️ Confirm Your Order</h1>
+            <h1>Order Confirmation</h1>
             <p>Review your items and delivery address before placing your order</p>
         </div>
 
         <div class="content">
             <!-- Order Summary -->
-            <div class="order-summary">
-                <h2>📦 Order Summary</h2>
+            <div class="section">
+                <h2>Order Summary</h2>
                 
-                {% for item in order_items %}
-                <div class="order-item">
-                    <div class="item-info">
-                        <div class="item-name">{{ item.product.name }}</div>
-                        <div class="item-details">
-                            Quantity: {{ item.quantity }} × ₹{{ item.product.price }}
+                {% for order in orders %}
+                    <div class="order-group">
+                        <div class="order-header">
+                            <div class="order-id">Order #{{ order.id }}</div>
+                            <div class="order-date">Placed on {{ order.ordered_at|date:"M d, Y H:i" }}</div>
+                        </div>
+                        
+                        <div class="order-items">
+                            {% for item in order_items %}
+                                {% if item.order.id == order.id %}
+                                    <div class="order-item">
+                                        <div class="item-info">
+                                            <div class="item-name">{{ item.product.name }}</div>
+                                            <div class="item-details">
+                                                Quantity: {{ item.quantity }} × ₹{{ item.product.price }}
+                                            </div>
+                                        </div>
+                                        <div class="item-total">₹{{ item.get_total_price }}</div>
+                                    </div>
+                                {% endif %}
+                            {% empty %}
+                                <div class="no-items">No items found in this order.</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="order-total">
+                            <div class="order-total-amount">Order Total: ₹{{ order.total_amount }}</div>
+                            <div class="order-total-description">Including taxes and charges</div>
                         </div>
                     </div>
-                    <div class="item-total">₹{{ item.total }}</div>
-                </div>
                 {% empty %}
-                <div class="no-address">No items in your order</div>
+                    <div class="no-items">No orders found.</div>
                 {% endfor %}
 
-                <div class="total-section">
-                    <div class="total-amount">
-                        Total: ₹{{ total_amount }}
-                    </div>
-                    <p>Including all taxes and charges</p>
+                <!-- Grand Total Section (if multiple orders) -->
+                {% if orders|length > 1 %}
+                <div class="grand-total-section">
+                    <div class="grand-total-amount">Grand Total: ₹<span id="grandTotal">0</span></div>
+                    <div class="grand-total-description">Total for all orders including all taxes and charges</div>
                 </div>
+                {% endif %}
             </div>
 
-            <div class="address-section">
-                <h2>🚚 Delivery Address</h2>
+            <!-- Delivery Address -->
+            <div class="section">
+                <h2>Delivery Address</h2>
                 
-             
+                {% if delivery_addresses %}
+                    {% for address in delivery_addresses %}
+                    <div class="address-option {% if address.is_default %}selected{% endif %}">
+                        <input type="radio" 
+                               name="delivery_address" 
+                               value="{{ address.id }}" 
+                               id="address_{{ address.id }}"
+                               {% if address.is_default %}checked{% endif %}>
+                        <label for="address_{{ address.id }}">
+                            <div class="address-name">
+                                {{ address.full_name }}
+                                {% if address.is_default %}<span class="default-badge">(Default)</span>{% endif %}
+                            </div>
+                            <div class="address-details">
+                                <div><span class="icon">📱</span>{{ address.phone_number }}</div>
+                                <div><span class="icon">📍</span>{{ address.address_line_1 }}</div>
+                                {% if address.address_line_2 %}
+                                <div>{{ address.address_line_2 }}</div>
+                                {% endif %}
+                                <div>{{ address.city }}, {{ address.state }} - {{ address.postal_code }}</div>
+                                <div>{{ address.country }}</div>
+                            </div>
+                        </label>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-address">
+                        <p>No delivery address found. Please add an address to continue.</p>
+                    </div>
+                {% endif %}
+
+                <div class="button-group">
+                    <a href="{% url 'add_address' %}" class="btn btn-secondary">
+                        <span class="icon">+</span>Add New Address
+                    </a>
                     
                     {% if delivery_addresses %}
-                        {% for address in delivery_addresses %}
-                        <div class="address-option {% if address.is_default %}selected{% endif %}">
-                            <input type="radio" 
-                                   name="delivery_address" 
-                                   value="{{ address.id }}" 
-                                   id="address_{{ address.id }}"
-                                   {% if address.is_default %}checked{% endif %}>
-                            <label for="address_{{ address.id }}">
-                                <div class="address-name">
-                                    {{ address.full_name }}
-                                    {% if address.is_default %}<span style="color: #4facfe;">(Default)</span>{% endif %}
-                                </div>
-                                <div class="address-details">
-                                    <div>📱 {{ address.phone_number }}</div>
-                                    <div>📍 {{ address.address_line_1 }}</div>
-                                    {% if address.address_line_2 %}
-                                    <div>{{ address.address_line_2 }}</div>
-                                    {% endif %}
-                                    <div>{{ address.city }}, {{ address.state }} - {{ address.postal_code }}</div>
-                                    <div>{{ address.country }}</div>
-                                </div>
-                            </label>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="no-address">
-                            <p>No delivery address found. Please add an address to continue.</p>
-                        </div>
+                    <a href="{% url 'edit_address' delivery_addresses.first.id %}" class="btn btn-outline">
+                        <span class="icon">✏️</span>Edit Address
+                    </a>
                     {% endif %}
+                </div>
 
-                    <div style="margin-top: 20px;">
-                        <a href="{% url 'add_address' %}" class="btn btn-secondary">
-                            ➕ Add New Address
-                        </a>
-                        
-                        {% if delivery_addresses %}
-                        <a href="{% url 'edit_address' delivery_addresses.first.id %}" class="btn">
-                            ✏️ Edit Address
-                        </a>
-                        {% endif %}
+                <div class="actions">
+                    {% if delivery_addresses %}
+                        <button type="button" class="btn btn-primary" onclick="showPaymentSection()">
+                            <span class="icon">✓</span>Place Order
+                        </button>
+                    {% endif %}
+                    
+                    <a href="{% url 'checkout' %}" class="btn btn-outline">
+                        <span class="icon">←</span>Back to Cart
+                    </a>
+                </div>
+
+                <!-- Payment Section -->
+                <div class="payment-section" id="paymentSection">
+                    <h3>💳 Payment Details</h3>
+                    
+                    <div class="payment-total">
+                        <div class="payment-total-amount">Total Amount: ₹<span id="paymentTotal">0</span></div>
+                        <div class="payment-total-description">Secure payment processed by Stripe</div>
                     </div>
 
-                    <div class="actions">
-                        {% if delivery_addresses %}
-                            <button type="submit" class="btn btn-primary">
-                                🎉 Place Order
+                    <div class="payment-method selected">
+                        <input type="radio" name="payment_method" value="card" id="card_payment" checked>
+                        <label for="card_payment" class="payment-method-label">
+                            <span class="payment-method-icon">💳</span>
+                            Credit/Debit Card
+                        </label>
+                    </div>
+
+                    <div class="stripe-form active" id="cardForm">
+                        <form id="payment-form">
+                            <div class="form-group">
+                                <label for="card-element" class="form-label">
+                                    Card Information
+                                </label>
+                                <div id="card-element">
+                                    <!-- Stripe Elements will create form elements here -->
+                                </div>
+                                <div id="card-errors" role="alert"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" id="email" class="form-input" placeholder="your@email.com" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name" class="form-label">Cardholder Name</label>
+                                <input type="text" id="name" class="form-input" placeholder="John Doe" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-pay" id="submit-payment">
+                                <span class="icon">🔒</span>Pay ₹<span id="payButtonAmount">0</span>
                             </button>
-                        {% endif %}
-                        
-                        <!-- <a href="{% url 'checkout' %}" class="btn">
-                            ⬅️ Back to Cart
-                        </a> -->
+
+                            <div class="security-notice">
+                                <span class="icon">🔒</span>
+                                Your payment information is secure and encrypted
+                            </div>
+                        </form>
                     </div>
+
+                    <div style="text-align: center; margin-top: 16px;">
+                        <button type="button" class="btn btn-outline" onclick="hidePaymentSection()">
+                            <span class="icon">←</span>Back to Order Details
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <script src="https://js.stripe.com/v3/"></script>
     <script>
         document.querySelectorAll('.address-option').forEach(option => {
             option.addEventListener('click', function() {
@@ -335,11 +699,208 @@
                 });
                 
                 this.classList.add('selected');
-                                if (radio) {
+                
+                const radio = this.querySelector('input[type="radio"]');
+                if (radio) {
                     radio.checked = true;
                 }
             });
         });
+
+        // Calculate Grand Total
+        let grandTotal = 0;
+        
+        function calculateGrandTotal() {
+            const orderTotals = document.querySelectorAll('.order-total-amount');
+            grandTotal = 0;
+            
+            orderTotals.forEach(total => {
+                // Extract numeric value from "Order Total: ₹1234" format
+                const text = total.textContent || total.innerText;
+                const amount = parseFloat(text.replace(/[^\d.]/g, ''));
+                if (!isNaN(amount)) {
+                    grandTotal += amount;
+                }
+            });
+            
+            // Update grand total display
+            const grandTotalElement = document.getElementById('grandTotal');
+            if (grandTotalElement) {
+                grandTotalElement.textContent = grandTotal.toFixed(2);
+            }
+            
+            // Update payment total
+            const paymentTotalElement = document.getElementById('paymentTotal');
+            const payButtonAmountElement = document.getElementById('payButtonAmount');
+            if (paymentTotalElement) {
+                paymentTotalElement.textContent = grandTotal.toFixed(2);
+            }
+            if (payButtonAmountElement) {
+                payButtonAmountElement.textContent = grandTotal.toFixed(2);
+            }
+        }
+        
+        // Calculate grand total when page loads
+        document.addEventListener('DOMContentLoaded', calculateGrandTotal);
+
+        // Payment Section Functions
+        function showPaymentSection() {
+            // Check if address is selected
+            const selectedAddress = document.querySelector('input[name="delivery_address"]:checked');
+            if (!selectedAddress) {
+                alert('Please select a delivery address first.');
+                return;
+            }
+            
+            document.getElementById('paymentSection').classList.add('active');
+            document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function hidePaymentSection() {
+            document.getElementById('paymentSection').classList.remove('active');
+        }
+
+        // Stripe Integration
+        const stripe = Stripe('pk_test_your_publishable_key_here');
+        const elements = stripe.elements();
+
+        // Create card element
+        const cardElement = elements.create('card', {
+            style: {
+                base: {
+                    fontSize: '16px',
+                    color: '#424770',
+                    '::placeholder': {
+                        color: '#aab7c4',
+                    },
+                },
+                invalid: {
+                    color: '#9e2146',
+                },
+            },
+        });
+
+        cardElement.mount('#card-element');
+
+        cardElement.on('change', function(event) {
+            const displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        const form = document.getElementById('payment-form');
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const submitButton = document.getElementById('submit-payment');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Processing...';
+            
+            form.classList.add('processing');
+
+            try {
+                const email = document.getElementById('email').value;
+                const name = document.getElementById('name').value;
+                const selectedAddress = document.querySelector('input[name="delivery_address"]:checked').value;
+
+                const {error, paymentMethod} = await stripe.createPaymentMethod({
+                    type: 'card',
+                    card: cardElement,
+                    billing_details: {
+                        name: name,
+                        email: email,
+                    },
+                });
+
+                if (error) {
+                    const errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = error.message;
+                    
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = '<span class="icon">🔒</span>Pay ₹' + grandTotal.toFixed(2);
+                    form.classList.remove('processing');
+                } else {
+                    handlePaymentMethodResult(paymentMethod, email, name, selectedAddress);
+                }
+            } catch (err) {
+                console.error('Payment error:', err);
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<span class="icon">🔒</span>Pay ₹' + grandTotal.toFixed(2);
+                form.classList.remove('processing');
+            }
+        });
+
+        async function handlePaymentMethodResult(paymentMethod, email, name, addressId) {
+            try {
+                const response = await fetch('/process-payment/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'), 
+                    },
+                    body: JSON.stringify({
+                        payment_method_id: paymentMethod.id,
+                        amount: Math.round(grandTotal * 100), 
+                        email: email,
+                        name: name,
+                        address_id: addressId,
+                        order_ids: getOrderIds(),
+                    }),
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Payment successful! Order placed successfully.');
+                    window.location.href = '/order-success/';
+                } else {
+                    document.getElementById('card-errors').textContent = result.error || 'Payment failed. Please try again.';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('card-errors').textContent = 'Network error. Please try again.';
+            }
+
+            // Re-enable button
+            const submitButton = document.getElementById('submit-payment');
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<span class="icon">🔒</span>Pay ₹' + grandTotal.toFixed(2);
+            document.getElementById('payment-form').classList.remove('processing');
+        }
+
+        // Helper function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Helper function to get order IDs (implement based on your template structure)
+        function getOrderIds() {
+            // Extract order IDs from the page - you might need to modify this based on your template
+            const orderIds = [];
+            const orderHeaders = document.querySelectorAll('.order-id');
+            orderHeaders.forEach(header => {
+                const text = header.textContent || header.innerText;
+                const match = text.match(/Order #(\d+)/);
+                if (match) {
+                    orderIds.push(match[1]);
+                }
+            });
+            return orderIds;
+        }
     </script>
 </body>
 </html>

@@ -200,6 +200,8 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Order, OrderItem, Product
 from django.http import JsonResponse
 
+
+
 @login_required
 def checkout(request):
     if request.method == 'POST':
@@ -211,7 +213,6 @@ def checkout(request):
             return render(request, 'error.html', {'message': 'Invalid cart data'})
 
         order = Order.objects.create(customer=request.user)
-
         total_amount = 0
 
         for item in cart_items:
@@ -219,7 +220,6 @@ def checkout(request):
                 product = Product.objects.get(id=item['item_id'])
                 quantity = int(item['quantity'])
                 item_total = product.price * quantity
-                print("ppppppp",order,product)
                 total_amount += item_total
 
                 OrderItem.objects.create(
@@ -227,43 +227,31 @@ def checkout(request):
                     product=product,
                     quantity=quantity,
                 )
-
             except Product.DoesNotExist:
-                continue  
+                continue
 
         order.total_amount = total_amount
         order.save()
         AddToCart.objects.filter(user=request.user).delete()
         request.session['cart'] = {}
-        order_items = []
-        total_amount = 0
+        request.session['cart_count'] = 0
 
-        for item in cart_items:
-            try:
-                product = Product.objects.get(id=item['item_id'])
-                quantity = int(item['quantity'])
-                item_total = product.price * quantity
-                total_amount += item_total
-                
-                order_items.append({
-                    'product': product,
-                    'quantity': quantity,
-                    'total': item_total
-                })
-            except Product.DoesNotExist:
-                continue
+    all_orders = Order.objects.filter(
+        customer=request.user,
+        state='pending'
+    ).order_by('-ordered_at')
+    all_order_items = OrderItem.objects.filter(order__in=all_orders).select_related('product', 'order')
 
-        delivery_addresses = DeliveryAddress.objects.filter(user=request.user)
-        default_address = delivery_addresses.filter(is_default=True).first()
-        context = {
-        'order_items': order_items,
-        'total_amount': total_amount,
+    delivery_addresses = DeliveryAddress.objects.filter(user=request.user)
+    default_address = delivery_addresses.filter(is_default=True).first()
+
+    context = {
+        'orders': all_orders,
+        'order_items': all_order_items,
         'delivery_addresses': delivery_addresses,
         'default_address': default_address,
-        }
-
-        return render(request, 'order.html',context)  
-    return redirect('cart_view')
+    }
+    return render(request, 'order.html', context)
 
 @login_required
 def add_delivery_address(request):
@@ -313,9 +301,46 @@ def edit_delivery_address(request, address_id):
         address.save()
 
         messages.success(request, 'Address updated successfully!')
-        return redirect('confirm_order')
+        return redirect('checkout')
 
-    return re
+    return render(request, 'edit_address.html')
+
+
+import stripe
+from django.conf import settings
+
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def process_payment(request):
+    try:
+        data = json.loads(request.body)
+        
+        intent = stripe.PaymentIntent.create(
+            amount=data['amount'],  
+            currency='inr',
+            payment_method=data['payment_method_id'],
+            confirm=True,
+            automatic_payment_methods={
+                'enabled': True,
+                'allow_redirects': 'never'
+            }
+        )
+        
+        if intent.status == 'succeeded':
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'error': 'Payment failed'})
+            
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})    
+
    
 
 
