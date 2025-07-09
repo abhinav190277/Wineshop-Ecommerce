@@ -319,6 +319,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 @csrf_exempt
 @require_http_methods(["POST"])
 def process_payment(request):
+    print("ppppppppppppppppppppppppppppppppppppppppppppp")
     try:
         data = json.loads(request.body)
         

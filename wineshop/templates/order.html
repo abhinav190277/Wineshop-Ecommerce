@@ -814,6 +814,7 @@
                         email: email,
                     },
                 });
+                console.log("ppppppppp",error);
 
                 if (error) {
                     const errorElement = document.getElementById('card-errors');
@@ -834,6 +835,7 @@
         });
 
         async function handlePaymentMethodResult(paymentMethod, email, name, addressId) {
+            console.log("helllooooooooooo");
             try {
                 const response = await fetch('/process-payment/', {
                     method: 'POST',
